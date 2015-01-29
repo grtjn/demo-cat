@@ -11,7 +11,7 @@ function getAuth(options, session) {
   'use strict';
 
   if (session.user !== undefined && session.user.name !== undefined) {
-    return session.user.name + ':' + session.user.password;
+    return 'demo-cat-' + session.user.name + ':' + session.user.password;
   } else {
     return options.defaultUser + ':' + options.defaultPass;
   }
@@ -37,14 +37,17 @@ exports.buildExpress = function(options) {
   app.set('views', ui);
   app.set('view engine', 'ejs');
 
-  function proxy(req, res) {
+  function proxy(req, res, signup) {
     var queryString = req.originalUrl.split('?')[1];
-    console.log(req.method + ' ' + req.path + ' proxied to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
+    var host = signup ? options.signupHost : options.mlHost;
+    var port = signup ? options.signupPort : options.mlPort;
+    var path = req.path.replace(/^\/signup/, '');
+    console.log(req.method + ' ' + req.path + ' proxied to ' + host + ':' + port + path + (queryString ? '?' + queryString : ''));
     var mlReq = http.request({
-      hostname: options.mlHost,
-      port: options.mlPort,
+      hostname: host,
+      port: port,
       method: req.method,
-      path: req.path + (queryString ? '?' + queryString : ''),
+      path: path + (queryString ? '?' + queryString : ''),
       headers: req.headers,
       auth: getAuth(options, req.session)
     }, function(response) {
@@ -58,6 +61,7 @@ exports.buildExpress = function(options) {
     });
 
     if (req.body !== undefined) {
+      console.log(req.body);
       mlReq.write(JSON.stringify(req.body));
       mlReq.end();
     }
@@ -66,6 +70,19 @@ exports.buildExpress = function(options) {
       console.log('Problem with request: ' + e.message);
     });
   }
+
+  app.get('/signup/*', function(req, res) {
+    proxy(req, res, true);
+  });
+  app.post('/signup/*', function(req, res) {
+    proxy(req, res, true);
+  });
+  app.put('/signup/*', function(req, res) {
+    proxy(req, res, true);
+  });
+  app.delete('/signup/*', function(req, res) {
+    proxy(req, res, true);
+  });
 
   app.get('/user/status', function(req, res) {
     if (req.session.user === undefined) {
@@ -88,7 +105,7 @@ exports.buildExpress = function(options) {
       port: options.mlPort,
       path: '/v1/documents?uri=/users/' + req.query.username + '.json',
       headers: req.headers,
-      auth: req.query.username + ':' + req.query.password
+      auth: 'demo-cat-' + req.query.username + ':' + req.query.password
     }, function(response) {
       if (response.statusCode === 401) {
         res.status(401);

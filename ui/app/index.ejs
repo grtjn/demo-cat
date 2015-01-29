@@ -28,7 +28,7 @@
           <li ng-show="model.user.authenticated"><form action="/create"><button class="btn btn-danger btn-sm btn-create">Create</button></form></li>
         </ul>
         <div class="navbar-form navbar-left">
-          <ml-remote-input template="fa"></ml-remote-input>
+          <ml-remote-input ng-show="model.user.authenticated" template="fa"></ml-remote-input>
         </div>
         <div ml-user username="model.user.name" password="model.user.password" authenticated="model.user.authenticated" login="login(username, password)" logout="logout()" loginerror="model.user.loginError"/>
       </div><!-- /.navbar-collapse -->
@@ -36,8 +36,8 @@
 
 
     <!-- Add your site or application content here -->
-    <div ng-show="!model.user.authenticated" class="not-logged-in">
-      <div class="alert alert-danger col-md-4 login-error" role="alert">Please log in to see content</div>
+    <div ng-show="!(model.user.authenticated || model.user.signup)" class="not-logged-in">
+      <div class="alert alert-danger col-md-4 login-error" role="alert">Please log in to see content. <a ng-href="/sign-up">Sign up</a> if you don't have a login yet.</div>
     </div>
     <div class="container content" ng-view=""></div>
     <footer class="footer">
@@ -81,6 +81,7 @@
     <script src="scripts/controllers/demo.js"></script>
     <script src="scripts/controllers/create.js"></script>
     <script src="scripts/controllers/profile.js"></script>
+    <script src="scripts/controllers/signup.js"></script>
     <!-- endbuild -->
   </body>
 </html>

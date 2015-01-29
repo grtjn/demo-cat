@@ -7,9 +7,10 @@ sudo npm -g install forever
 cd ..
 npm install
 bower install
+gulp jshint less scripts
 
 cd /etc
-sudo ln -s /space/projects/demo-cat.live/etc/demo demo-cat
+sudo ln -s /space/projects/demo-cat.live/etc/prod demo-cat
 sudo ln -s demo-cat demo-cat-watch
 cd /etc/init.d
 sudo ln -s /space/projects/demo-cat.live/etc/init.d/node-express-service demo-cat

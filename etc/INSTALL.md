@@ -11,7 +11,12 @@ The code includes service scripts, and service configs to make installing expres
 
 The conf.sh is 'sourced' by the service scripts, and allows overriding the built-in defaults. Usually you only need to override SOURCE\_DIR, APP\_PORT, and ML\_PORT. Make sure they match the appropriate environment.
 
-Next step is to push all source files to the appropriate server. The following assumes it was dropped under /space/projects/ in a folder called demo-cat.live. Take these steps to install the services:
+Next step is to push all source files to the appropriate server. The following assumes it was dropped under /space/projects/ in a folder called demo-cat.live. Run:
+
+- cd etc
+- ./install.sh
+
+Or take these steps to install the services:
 
 - cd /etc
 - sudo ln -s /space/projects/demo-cat.live/etc/{env} demo-cat
@@ -52,3 +57,46 @@ NameVirtualHost *:80
 </VirtualHost>
 
 - sudo service httpd start
+
+# Initializing https
+
+See also http://wiki.centos.org/HowTos/Https
+
+First generate a new certificate for use with httpd. For this run:
+
+- cd etc
+- ./ssl.sh
+
+Next step is edit the ssl.conf of httpd to insert the new certificate, and apply it to all SSL enabled virtual hosts:
+
+- sudo vi +/SSLCertificateFile /etc/httpd/conf.d/ssl.conf
+- change path of SSLCertificateFile into: /etc/pki/tls/certs/demo-cat.crt
+- change path of SSLCertificateKeyFile into: /etc/pki/tls/private/demo-cat.key
+- find open and close tag of <VirtualHost \_default\_:443>, put a comment in front
+- find SSLEngine on line, put a comment in front
+- save and close
+
+Now, add a virtual host for https, and maybe also redirect http to https:
+
+- sudo vi /etc/httpd/conf/httpd.conf
+- scroll to the end
+- find the line with NameVirtualHost *:80, add this line underneath:
+
+NameVirtualHost *:443
+
+- find the virtual host for the http proxy, and replace Rewrite lines with:
+
+  Redirect permanent / https://catalog-new.demo.marklogic.com/
+  
+- add another virtual host underneath:
+
+<VirtualHost *:443>
+  SSLEngine on
+  ServerName catalog-new.demo.marklogic.com
+  RewriteEngine On
+  RewriteRule ^(.*)$ http://localhost:4000$1 [P]
+</VirtualHost>
+
+- save and close
+- sudo service httpd restart
+

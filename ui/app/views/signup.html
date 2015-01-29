@@ -1,0 +1,93 @@
+<div class="profile">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">{{model.action}} {{model.id}} sign-up here</h2>
+  </div>
+  <form class="form-horizontal" name="profileForm">
+  <div class="alert alert-danger" ng-show="model.action === 'Review' &amp;&amp; !model.user.authenticated" ng-cloak>You must be logged in, and have correct privileges to Approve or Reject sign-ups</div>
+    <div class="alert alert-success" ng-show="model.signupRequested" ng-cloak>A confirmation e-mail has been sent to you, open the link in the e-mail to confirm the signup</div>
+    <div class="alert alert-danger" ng-show="model.signupFailed" ng-cloak>{{model.signupFailed}}</div>
+    <div class="form-group">
+      <div class="row">
+        <label class="col-sm-2 control-label">Desired user role</label>
+        <div class="col-sm-2">
+          <select class="form-control" placeholder="Login of user" ng-model="model.signup.role">
+            <option value="viewer">Viewer</option>
+            <option value="editor">Editor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <div class="alert alert-sm alert-info">Vanguard will review your choice..</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <label class="col-sm-2 control-label">User name</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" placeholder="Login of user" ng-model="model.signup.name">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <label class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-2">
+          <input type="password" class="form-control" placeholder="Password of user" ng-model="model.signup.password">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <label class="col-sm-2 control-label">Retype Password</label>
+        <div class="col-sm-2">
+          <input type="password" class="form-control" placeholder="Retype password of user" ng-model="model.signup.password2">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <label class="col-sm-2 control-label">Full name</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" placeholder="full name of user" ng-model="model.signup.fullname">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <!-- show empty field if no emails yet -->
+      <div class="row">
+        <label class="col-sm-2 control-label">E-mail</label>
+        <div class="col-sm-6">
+          <input type="email" name="newEmail" class="form-control" placeholder="e-mail of user" ng-model="model.newEmail">
+        </div>
+        <!--div class="col-sm-1">
+          <button class="btn btn-default" ng-click="addEmail()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div-->
+      </div>
+      <div class="row valid-email">
+        <div class="col-sm-offset-2 col-sm-6 error" ng-show="profileForm.newEmail.$error.email">Not a valid email!</div>
+      </div>
+      <!-- always show add button -->
+      <!-- repeat if there are emails - ->
+      <div class="row" ng-repeat="email in model.signup.emails track by $index">
+        <div class="col-sm-offset-2 col-sm-6">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="e-mail of user" ng-model="model.signup.emails[$index]">
+            <span class="input-group-addon" ng-click="removeEmail($index)">
+              <span class="glyphicon glyphicon-remove"></span>
+            </span>
+          </div>
+        </div>
+      </div-->
+    </div>
+    <div class="row">
+      <a class="col-sm-offset-5 col-sm-1" href="/">Cancel</a>
+      <button ng-hide="model.action === 'Review'" class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+      <button ng-show="model.action === 'Review'" class="col-sm-2 btn btn-primary" ng-click="submit('approve')">Approve</button>
+      <button ng-show="model.action === 'Review'" class="col-sm-2 btn btn-primary" ng-click="submit('reject')">Reject</button>
+    </div>
+  </form>
+</div>

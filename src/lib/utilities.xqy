@@ -17,7 +17,7 @@ declare function utilities:send-notification(
       <rf:from>
         <em:Address>
           <em:name>Demo Cat</em:name>
-          <em:adrs>no-reply@ydemo-cat.marklogic.com</em:adrs>
+          <em:adrs>no-reply@catalog.demo.marklogic.com</em:adrs>
         </em:Address>
       </rf:from>
       <rf:to>

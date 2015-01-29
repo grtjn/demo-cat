@@ -18,6 +18,8 @@ var options = {
   appPort: argv['app-port'] || 4000,
   mlHost: argv['ml-host'] || 'localhost',
   mlPort: argv['ml-port'] || '8070',
+  signupHost: argv['signup-host'] || 'localhost',
+  signupPort: argv['signup-port'] || '8072',
   defaultUser: 'demo-cat-user',
   defaultPass: 'c2t2l0g'
 };
