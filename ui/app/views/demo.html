@@ -68,14 +68,14 @@
           <h4>Accessible at</h4>
           <span>
             <a ng-href="{{model.demo.url}}" target="_blank">{{model.demo.url}}</a>
-            <span ng-if="model.demo.urlType">(<span class="value">{{model.demo.urlType}}</span>)</span>
+            <span ng-if="model.demo.accessibility">(<span class="value">{{model.demo.accessibility}}</span>)</span>
           </span>
         </div>
         <div ng-if="model.demo.host">
           <h4>Hosted at</h4>
           <span>
             <a ng-href="http://{{model.demo.host}}:8001" target="_blank">{{model.demo.host}}</a>
-            <span ng-if="model.demo.accessibility">(<span class="value">{{model.demo.accessibility}}</span>)</span>
+            <span ng-if="model.demo.urlType">(<span class="value">{{model.demo.urlType}}</span>)</span>
           </span>
         </div>
         <div ng-if="model.demo.credentials.length">
